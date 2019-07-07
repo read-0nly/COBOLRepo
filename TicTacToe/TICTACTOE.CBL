@@ -2,9 +2,9 @@ IDENTIFICATION DIVISION.
 PROGRAM-ID. TICTACTOE.
 DATA DIVISION.
 LOCAL-STORAGE SECTION.
-    01 GAMEBOARD PIC X(9) VALUES "---------".
+    01 GAMEBOARD PIC X(9) VALUES ".........".
     01 PLAYERS PIC A(2) VALUES "XO".
-    01 EMPTYCELL PIC X(1) VALUES '-'.
+    01 EMPTYCELL PIC X(1) VALUES '.'.
     01 CURRENTPLAYER PIC 9(1) VALUES 0.
         88 ISPLAYER VALUES 1.
     01 LOOPCOUNTER PIC 9(1) VALUES 1.
@@ -17,9 +17,12 @@ LOCAL-STORAGE SECTION.
     
 PROCEDURE DIVISION.
     ShowBoard.
-        DISPLAY GAMEBOARD(1:3)
-        DISPLAY GAMEBOARD(4:3)
-        DISPLAY GAMEBOARD(7:3)
+        DISPLAY "-----"
+        DISPLAY "|"GAMEBOARD(1:3)"|"
+        DISPLAY "|"GAMEBOARD(4:3)"|"
+        DISPLAY "|"GAMEBOARD(7:3)"|"
+        DISPLAY "-----"
+        DISPLAY " "
         GO TO CheckWin.
     
     CheckWin.
@@ -30,26 +33,23 @@ PROCEDURE DIVISION.
         
         IF WINNER < 0
             MOVE 1 TO LOOPCOUNTER
-            DISPLAY "lc"LOOPCOUNTER
             PERFORM RowCheck
-        ELSE
-            DISPLAY "COLWIN"    
         END-IF
         
         IF WINNER < 0
             MOVE 1 TO LOOPCOUNTER
             PERFORM DiagCheck
-        ELSE
-            DISPLAY "ROWWIN"
         END-IF
         
         IF WINNER < 0
             PERFORM NextPlayer
             GO TO PlayRound
         ELSE
+            DISPLAY "--------------------------"
             DISPLAY "WINNER:"PLAYERS(WINNER:1)
             DISPLAY "WINNING INDICES:"
             DISPLAY LOOPCOUNTER" "LOOPCOUNTER2" "LOOPCOUNTER3
+            DISPLAY "--------------------------"
             GO TO Endpoint
         END-IF.
         
@@ -63,14 +63,20 @@ PROCEDURE DIVISION.
         END-IF.
         
     PlayRound.
+        DISPLAY " "
         DISPLAY "CURRENT PLAYER:"PLAYERS(CURRENTPLAYER:1)
+        DISPLAY " "
         DISPLAY "PLEASE ENTER THE ROW(1-3)"
         ACCEPT PLAYROW
         IF PLAYROW < 4 AND PLAYROW > 0
+            DISPLAY "ENTERED ROW:"PLAYROW
+            DISPLAY " "
             DISPLAY "PLEASE ENTER THE COLUMN (1-3)"
             ACCEPT PLAYCOL
             
             IF PLAYROW < 4 AND PLAYROW > 0
+                DISPLAY "ENTERED COLUMN:"PLAYCOL
+                DISPLAY " "
                 SUBTRACT 1 FROM PLAYROW GIVING PLAYIND
                 MULTIPLY PLAYIND BY 3 GIVING PLAYIND
                 ADD PLAYIND TO PLAYCOL GIVING PLAYIND
@@ -80,7 +86,8 @@ PROCEDURE DIVISION.
                 END-IF
             END-IF
         END-IF
-        DISPLAY "INVALID PLAY ("PLAYROW":"PLAYCOL"="PLAYIND"). PLEASE TRY AGAIN."
+        DISPLAY "INVALID PLAY ("PLAYROW":"PLAYCOL"). PLEASE TRY AGAIN."
+        DISPLAY " "
         GO TO PlayRound.
         
     ColumnCheck.
@@ -96,7 +103,6 @@ PROCEDURE DIVISION.
         END-IF.
         
     RowCheck.
-        DISPLAY "lc"LOOPCOUNTER
         ADD LOOPCOUNTER TO 1 GIVING LOOPCOUNTER2
         ADD LOOPCOUNTER2 TO 1 GIVING LOOPCOUNTER3
         IF GAMEBOARD(LOOPCOUNTER:1) = GAMEBOARD(LOOPCOUNTER2:1) AND GAMEBOARD(LOOPCOUNTER2:1) = GAMEBOARD(LOOPCOUNTER3:1) AND GAMEBOARD(LOOPCOUNTER:1) NOT = EMPTYCELL
@@ -125,3 +131,4 @@ PROCEDURE DIVISION.
     
     EndPoint.
     STOP RUN.
+END PROGRAM TICTACTOE.
