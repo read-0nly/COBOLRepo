@@ -20,7 +20,6 @@ PROCEDURE DIVISION.
         DISPLAY GAMEBOARD(1:3)
         DISPLAY GAMEBOARD(4:3)
         DISPLAY GAMEBOARD(7:3)
-        PERFORM NextPlayer
         GO TO CheckWin.
     
     CheckWin.
@@ -40,6 +39,7 @@ PROCEDURE DIVISION.
         END-IF
         
         IF WINNER < 0
+            PERFORM NextPlayer
             GO TO PlayRound
         ELSE
             DISPLAY "WINNER:"PLAYERS(WINNER:1)
