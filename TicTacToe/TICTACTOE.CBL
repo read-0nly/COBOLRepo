@@ -30,12 +30,17 @@ PROCEDURE DIVISION.
         
         IF WINNER < 0
             MOVE 1 TO LOOPCOUNTER
+            DISPLAY "lc"LOOPCOUNTER
             PERFORM RowCheck
+        ELSE
+            DISPLAY "COLWIN"    
         END-IF
         
         IF WINNER < 0
             MOVE 1 TO LOOPCOUNTER
             PERFORM DiagCheck
+        ELSE
+            DISPLAY "ROWWIN"
         END-IF
         
         IF WINNER < 0
@@ -91,13 +96,14 @@ PROCEDURE DIVISION.
         END-IF.
         
     RowCheck.
+        DISPLAY "lc"LOOPCOUNTER
         ADD LOOPCOUNTER TO 1 GIVING LOOPCOUNTER2
         ADD LOOPCOUNTER2 TO 1 GIVING LOOPCOUNTER3
         IF GAMEBOARD(LOOPCOUNTER:1) = GAMEBOARD(LOOPCOUNTER2:1) AND GAMEBOARD(LOOPCOUNTER2:1) = GAMEBOARD(LOOPCOUNTER3:1) AND GAMEBOARD(LOOPCOUNTER:1) NOT = EMPTYCELL
             MOVE CURRENTPLAYER TO WINNER
         ELSE
-            IF LOOPCOUNTER < 9
-                ADD 3 TO LOOPCOUNTER
+            IF LOOPCOUNTER < 7
+                ADD 3 TO LOOPCOUNTER GIVING LOOPCOUNTER
                 GO TO RowCheck
             END-IF
         END-IF.
