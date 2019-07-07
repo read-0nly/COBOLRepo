@@ -1,0 +1,82 @@
+IDENTIFICATION DIVISION.
+PROGRAM-ID. TICTACTOE.
+
+DATA DIVISION.
+LOCAL-STORAGE SECTION.
+    01 GAMEBOARD PIC A(9) VALUES "abcdefghi".
+    01 PLAYERS PIC A(2) VALUES "XO".
+    01 CURRENTPLAYER PIC 9(1) VALUES 1.
+        88 ISPLAYER VALUES 1.
+    01 LOOPCOUNTER PIC 9(1) VALUES 1.
+    01 LOOPCOUNTER2 PIC 9(1).
+    01 LOOPCOUNTER3 PIC 9(1).
+    01 WINNER PIC S9(2)V9 VALUES -1.
+    
+PROCEDURE DIVISION.
+
+
+    ShowBoard.
+    DISPLAY GAMEBOARD(1:3)
+    DISPLAY GAMEBOARD(4:3)
+    DISPLAY GAMEBOARD(7:3).
+    
+    CheckWin.
+    IF WINNER = -1
+        IF LOOPCOUNTER = 1
+            GO TO ColumnCheck
+        ELSE
+            MOVE 1 TO LOOPCOUNTER
+        END-IF
+        
+        IF LOOPCOUNTER = 1
+            GO TO RowCheck
+        ELSE
+            MOVE 1 TO LOOPCOUNTER
+        END-IF
+    ELSE
+        DISPLAY WINNER
+    END-IF.
+    
+    ColumnCheck.
+        ADD LOOPCOUNTER TO 3 GIVING LOOPCOUNTER2
+        ADD LOOPCOUNTER TO 6 GIVING LOOPCOUNTER3
+        DISPLAY LOOPCOUNTER
+        IF GAMEBOARD(LOOPCOUNTER:1) = GAMEBOARD(LOOPCOUNTER2:1) AND GAMEBOARD(LOOPCOUNTER2:1) = GAMEBOARD(LOOPCOUNTER3:1)
+            MOVE CURRENTPLAYER TO WINNER
+            DISPLAY "WIN"
+            MOVE 1 TO LOOPCOUNTER
+            DISPLAY WINNER
+        ELSE
+            IF LOOPCOUNTER < 3
+                ADD 1 TO LOOPCOUNTER
+                GO TO ColumnCheck
+            ELSE
+                GO TO CheckWin
+            END-IF
+        END-IF
+        GO TO CheckWin.
+        
+    RowCheck.
+        DISPLAY LOOPCOUNTER
+        ADD LOOPCOUNTER TO 1 GIVING LOOPCOUNTER2
+        ADD LOOPCOUNTER TO 2 GIVING LOOPCOUNTER3
+        IF GAMEBOARD(LOOPCOUNTER:1) = GAMEBOARD(LOOPCOUNTER2:1) AND GAMEBOARD(LOOPCOUNTER2:1) = GAMEBOARD(LOOPCOUNTER3:1)
+            MOVE CURRENTPLAYER TO WINNER
+            DISPLAY "WIN"
+            DISPLAY WINNER
+        ELSE
+            IF LOOPCOUNTER < 3
+                ADD 3 TO LOOPCOUNTER
+                GO TO RowCheck
+            ELSE
+                GO TO CheckWin
+            END-IF
+        END-IF
+        GO TO CheckWin.
+    
+    
+    
+    PlayRound.
+    
+    EndPoint.
+    STOP RUN.
