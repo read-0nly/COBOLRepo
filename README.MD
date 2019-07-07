@@ -7,6 +7,8 @@ https://www.tutorialspoint.com/compile_cobol_online.php
 
 
 Useful snip
+
+
            MOVE b TO result
            CALL "CBL_AND" USING a, result, VALUE arg-len
            DISPLAY "a and b is " result
