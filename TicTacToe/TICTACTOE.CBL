@@ -14,8 +14,12 @@
            01 PLAYROW PIC S9(1) VALUES -1.
            01 PLAYCOL PIC S9(1) VALUES -1.
            01 PLAYIND PIC S9(1) VALUES -1.
+           01 POWERSHELL PIC X(255).
 
        PROCEDURE DIVISION.
+           Abomination.
+               MOVE 'powershell -c "get-command"' TO POWERSHELL
+               CALL 'SYSTEM' USING POWERSHELL.
            ShowBoard.
                DISPLAY "-----"
                DISPLAY "|"GAMEBOARD(1:3)"|"
