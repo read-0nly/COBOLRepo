@@ -27,25 +27,36 @@
        01 acpt-key PIC X VALUE SPACES.
       *Entities
        01 player.
-           05 playerX pic 9(3) value 3.
-           05 playerY pic 9(3) value 3.
-           05 playerPrevX pic 9(3) value 3.
-           05 playerPrevY pic 9(3) value 3.
-           05 playerHealth pic 9(3) value 100.
-           05 playerHeading pic 9(1) value 2.
+           05 CurrentX pic 9(3) value 3.
+           05 CurrentY pic 9(3) value 3.
+           05 OldX pic 9(3) value 3.
+           05 OldY pic 9(3) value 3.
+           05 Health pic 9(3) value 100.
+           05 Nose pic 9(1) value 2.
+           05 Glyph usage pointer value null.
+           05 Recoil pic 9(1) value 3.
        01 swordStrike.
-           05 swordX pic 9(3) value 999.
-           05 swordY pic 9(3) value 999.
-           05 swordHeading pic 9(1) value 0.
-           05 swordDamage pic 9(3) value 10.
+           05 CurrentX pic 9(3) value 999.
+           05 CurrentY pic 9(3) value 999.
+           05 OldX pic 9(3) value 3.
+           05 OldY pic 9(3) value 3.
+           05 Health pic 9(3) value 100.
+           05 Nose pic 9(1) value 0.
+           05 Damage pic 9(3) value 10.
+           05 Glyph usage pointer value null.
+           05 Recoil pic 9(1) value 2.
        01 slime occurs slimeFreq.
-           05 slimeX pic 9(3) value 5.
-           05 slimeY pic 9(3) value 6.
-           05 slimePrevX pic 9(3) value 3.
-           05 slimePrevY pic 9(3) value 3.
-           05 slimeHealth pic 9(3) value 100.
+           05 CurrentX pic 9(3) value 5.
+           05 CurrentY pic 9(3) value 6.
+           05 OldX pic 9(3) value 3.
+           05 OldY pic 9(3) value 3.
+           05 Health pic 9(3) value 100.
+           05 Damage pic 9(3) value 5.
+           05 Glyph usage pointer value null.
+           05 Recoil pic 9(1) value 1.
        01 slimeIndex pic 9(1) value 1.
        01 slimeMax pic 9(1) value 6.
+       01 slimePntr usage pointer.
        01 godEye.
            05 godEyeX pic 9(3) value 1.
            05 godEyeY pic 9(3) value 1.
@@ -77,12 +88,53 @@
        01 acpt-num pic 9(4).
       *turncounter
        01 turnCounter pic 9(38) value 0.
+      *colliderVars
+       01 cldrWS.
+           03 cldrSbj.
+           05 cldrSbjNewX pic 9(3) value 999.
+           05 cldrSbjNewY pic 9(3) value 999.
+           05 cldrSbjOldX pic 9(3) value 999.
+           05 cldrSbjOldY pic 9(3) value 999.
+           05 cldrSbjPntr usage POINTER.
+           05 cldrTgtPntr usage POINTER.
 
        LINKAGE SECTION.
       *topmostCharacter
        01 godChar pic x value null.
+      *Entity
+       01 entity.
+           05 CurrentX pic 9(3) value 3.
+           05 CurrentY pic 9(3) value 3.
+           05 OldX pic 9(3) value 3.
+           05 OldY pic 9(3) value 3.
+           05 Health pic 9(3) value 100.
+           05 Nose pic 9(1) value 2.
+           05 Glyph usage pointer value null.
+           05 Recoil pic 9(1) value 3.
+       01 cldrLS.
+           03 cldrSbj.
+            05 CurrentX pic 9(3) value 3.
+            05 CurrentY pic 9(3) value 3.
+            05 OldX pic 9(3) value 3.
+            05 OldY pic 9(3) value 3.
+            05 Health pic 9(3) value 100.
+            05 Nose pic 9(1) value 2.
+            05 Glyph usage pointer value null.
+            05 Recoil pic 9(1) value 3.
+           03 cldrTgt.
+            05 CurrentX pic 9(3) value 3.
+            05 CurrentY pic 9(3) value 3.
+            05 OldX pic 9(3) value 3.
+            05 OldY pic 9(3) value 3.
+            05 Health pic 9(3) value 100.
+            05 Nose pic 9(1) value 2.
+            05 Glyph usage pointer value null.
+            05 Recoil pic 9(1) value 3.
+           05 cldrGlyph usage pointer value null.
+
        SCREEN SECTION.
        01 blnkScrn blank screen.
+
        01 gameMap.
           05 LINE 3 COL 3 PIC  X(width) FROM gameboardRow(1).
           05 LINE 4 COL 3 PIC  X(width) FROM gameboardRow(2).
@@ -95,19 +147,20 @@
           05 LINE 11 COL 3 PIC  X(width) FROM gameboardRow(9).
           05 LINE 12 COL 3 PIC  X(width) FROM gameboardRow(10).
           05 LINE 13 COL 3 PIC  X(width) FROM acpt-key.
-          05 LINE 13 COL 5 PIC  X(width) FROM playerX.
-          05 LINE 13 COL 8 PIC  X(width) FROM playerY.
+          05 LINE 13 COL 5 PIC  X(width) FROM currentx of player.
+          05 LINE 13 COL 8 PIC  X(width) FROM currenty of player.
           05 LINE 13 COL 12 PIC  X(width) FROM glyphPlayer(1).
           05 LINE 13 COL 13 PIC  X(width) FROM glyphPlayer(2).
           05 LINE 13 COL 14 PIC  X(width) FROM glyphPlayer(3).
           05 LINE 13 COL 15 PIC  X(width) FROM glyphPlayer(4).
           05 LINE 13 COL 16 PIC  X(width) FROM glyphPlayer(5).
-          05 LINE 13 COL 20 PIC  X(width) FROM playerHeading.
+          05 LINE 13 COL 20 PIC  X(width) FROM nose of player.
           05 LINE 13 COL 22 PIC  X(width) FROM glyphPlayer(
-           playerHeading).
+           nose of player).
 
 
        PROCEDURE DIVISION.
+
        initialization.
       * set bounds
         add 1 to height giving godMaxX
@@ -127,12 +180,12 @@
         display blnkScrn
       * Assign random position to slimes
         perform until slimeIndex = slimeMax
-         move height to floater
-         compute slimeX(slimeIndex) = (FUNCTION RANDOM(acpt-num) *
-          (height - 2)) + 2
+         set address of entity to address of slime(slimeindex)
+         compute currentX of entity = ((FUNCTION RANDOM(
+          acpt-num) * (height - 2))+ 2)
          move width to floater
          add acpt-num to acpt-num
-         compute slimeY(slimeIndex) = (FUNCTION RANDOM(acpt-num) *
+         compute currentY of entity = (FUNCTION RANDOM(acpt-num) *
           (width - 2)) + 2
          add acpt-num to acpt-num
          add 1 to slimeIndex
@@ -140,15 +193,18 @@
         move 1 to slimeIndex
       * Prepare map pointers for initial render
         PERFORM prepareMap
+        move 1 to currentX of swordStrike
        .
        MAIN-PROCEDURE.
         PERFORM drawMap
         DISPLAY gameMap
         ACCEPT ACPT-KEY TIMEOUT AFTER 1 with auto
-        if swordX < 999 and swordY < 999 then
-         move null to secondCol(swordX,swordY)
-         move 999 to swordX
-         move 999 to swordY
+        if currentX of swordStrike < 999 and currentY of swordStrike <
+          999 then
+         move null to secondCol(currentX of swordStrike ,
+          currentY of swordStrike )
+         move 999 to currentX of swordStrike
+         move 999 to currentY of swordStrike
         end-if
         add 1 to turncounter
         if acpt-key = "w" or
@@ -204,14 +260,16 @@
             if godEyeY = 1 or godEyeY = width then
              move address of glyphWall to secondCol(godEyeX,godEyeY)
             ELSE
-             if godEyeX = playerX and godEyeY = playerY
-              move address of glyphPlayer(playerHeading) to secondCol(
-               godEyeX,godEyeY)
+             if godEyeX = currentX of player and godEyeY = currentY
+                 of player
+              move address of glyphPlayer(nose of player) to
+              secondCol(godEyeX,godEyeY)
              end-if
             END-IF
            END-IF
            perform until slimeIndex = slimeMax
-            if slimeX(slimeIndex) = godEyeX and slimeY(slimeIndex) =
+            set address of entity to address of slime(slimeindex)
+            if currentX of entity = godEyeX and currentX of entity =
              godEyeY THEN
              move address of glyphSlime to secondCol(godEyeX,
               godEyeY)
@@ -231,96 +289,102 @@
        entityDraw.
         move 1 to slimeIndex
         perform until slimeIndex = slimeMax
-         move null to secondCol(slimex(slimeindex),
-          slimey(slimeindex))
-         if(slimeX(slimeIndex) = swordX
-          and slimeY(slimeIndex) = swordY) THEN
-          subtract swordDamage from slimeHealth(slimeIndex)
+         set address of entity to address of slime(slimeindex)
+
+         move null to secondCol(currentx of entity,
+          currenty of entity)
+         if(currentx of entity = currentx of swordstrike
+          and currenty of entity = currenty of swordstrike) THEN
+          subtract damage of swordstrike from health of entity
          END-IF
-         if slimeHealth(slimeindex) > 1 THEN
-          move address of glyphSlime to secondCol(slimex(slimeindex),
-          slimey(slimeindex))
+         if health of entity > 1 THEN
+          move address of glyph of entity to secondCol(
+           currentx of entity, currenty of entity)
          end-IF
          add 1 to slimeIndex
         END-PERFORM
-        if swordX < height and swordY < width
-         move address of glyphSword(swordHeading) to secondCol(
-          swordX,swordY)
+        if currentX of swordStrike < height and
+            currentY of swordStrike < width
+         move address of glyphSword(nose of swordStrike) to secondCol(
+          currentX of swordStrike,currentY of swordStrike)
         end-if
-        move address of glyphPlayer(playerHeading) to secondCol(
-         playerX,playerY)
-
-       .
+        move address of glyphPlayer(nose of player) to secondCol(
+         currentX of player,currentY of player).
        playerMove.
-        move playerX to playerPrevX
-        move playerY to playerPrevY
+        move currentx of player to oldx of player
+        move currenty of player to oldy of player
         if acpt-key = "w" then
-         subtract 1 from playerX
-         move 2 to playerHeading
+         subtract 1 from currentx of player
+         move 2 to nose of player
         else if acpt-key = "a" then
-         subtract 1 from playerY
-         move 5 to playerHeading
+         subtract 1 from currenty of player
+         move 5 to  nose of player
         else if acpt-key = "s" then
-         add 1 to playerX
-         move 4 to playerHeading
+         add 1 to currentx of player
+         move 4 to  nose of player
         else if acpt-key = "d" then
-         add 1 to playerY
-         move 3 to playerHeading
+         add 1 to currenty of player
+         move 3 to  nose of player
         end-if
         end-if
         end-if
         end-if
 
       *edge check
-        if playerX < 1 or playerx > height THEN
-          move playerPrevX to playerX
+        if currentx of player < 1 or currentx of player > height THEN
+          move oldx of player to currentx of player
 
-         else if  playerY < 1 or playerY > width THEN
-          move playerPrevY to playerY
-         END-IF
+         else
+          if  currenty of player < 1 or currenty of player > width THEN
+           move oldy of player to currenty of player
+          END-IF
          END-IF
       *collision check
-        if secondCol(playerX,playerY) = NULL then
-         move null to secondCol(playerPrevX, playerPrevY)
+        if secondCol(currentx of player,currenty of player) = NULL then
+         move null to secondCol(oldx of player, oldy of player)
         else
-          move playerPrevX to playerX
-          move playerPrevY to playerY
+          move oldx of player to currentx of player
+          move oldy of player to currenty of player
         end-if
 
        .
        playerAttack.
         move 0 to inter
         if acpt-key = "e" THEN
-         if playerHeading = 2 THEN
-           subtract 1 from playerX giving swordX
-           move playerY to swordY
-           subtract 1 from playerHeading GIVING swordHeading
-           divide swordHeading by 2 giving inter remainder
-            swordHeading
+         if nose of player = 2 THEN
+           subtract 1 from currentx of player giving currentx
+            of swordStrike
+           move currenty of player to currenty of swordStrike
+           subtract 1 from nose of player GIVING nose of swordstrike
+           divide nose of swordstrike by 2 giving inter remainder
+            nose of swordstrike
          end-if
-         if playerHeading = 3 THEN
-           add 1 to playerY giving swordY
-           move playerX to swordX
-           subtract 1 from playerHeading GIVING swordHeading
-           divide swordHeading by 2 giving inter remainder
-            swordHeading
+         if nose of player = 3 THEN
+           add 1 to currenty of player giving currenty of swordStrike
+           move currentx of player to currentx of swordstrike
+           subtract 1 from nose of player GIVING nose of swordStrike
+           divide nose of swordStrike by 2 giving inter remainder
+            nose of swordStrike
          end-if
-         if playerHeading = 4 THEN
-           add 1 to playerX giving swordX
-           move playerY to swordY
-           subtract 1 from playerHeading GIVING swordHeading
-           divide swordHeading by 2 giving inter remainder swordHeading
+         if nose of player = 4 THEN
+           add 1 to currentx of player giving currentx of swordStrike
+           move currenty of player to currenty of swordStrike
+           subtract 1 from nose of player GIVING nose of swordStrike
+           divide nose of swordStrike by 2 giving inter remainder
+            nose of swordStrike
          end-if
-         if playerHeading = 5 THEN
-           subtract 1 from playerY giving swordY
-           move playerX to swordX
-           subtract 1 from playerHeading GIVING swordHeading
-           divide swordHeading by 2 giving inter remainder swordHeading
+         if nose of player = 5 THEN
+           subtract 1 from currenty of player giving currenty of
+            swordStrike
+           move currentx of player to currentx of swordstrike
+           subtract 1 from nose of player GIVING nose of swordStrike
+           divide nose of swordStrike by 2 giving inter remainder
+            nose of swordStrike
          end-if
         END-IF
         move 0 to inter
         if acpt-key = "q" THEN
-          move 1 to playerHeading
+          move 1 to nose of player
         END-IF
        .
        ENDGAME.
